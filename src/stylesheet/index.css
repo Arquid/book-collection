@@ -1,0 +1,26 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+}
+
+.book-list-container {
+  border: solid 1px lightgrey;
+  border-radius: 3px;
+  margin-top: 32px;
+  margin-right: 15px;
+  float: inline-start;
+  height: 200px;
+}
+
+.book-form-container {
+  display: inline-block;
+}
+
+.save-new-btn {
+  margin-top: 15px;
+}
+
+.save-delete-btn {
+  margin-top: 15px;
+  margin-left: 15px;
+}
