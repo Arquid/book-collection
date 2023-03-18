@@ -22,14 +22,27 @@ app.get('/api/books/:id', (request, response) => {
   const id = Number(request.params.id);
   const book = books.find(book => book.id === id);
 
-  response.json(book);
+  if(book) {
+    response.json(book);
+  } else {
+    response.status(404).end();
+  }
 })
 
 app.post('/api/books', (request, response) => {
   const book = request.body;
+
+  if(!book.title) {
+    return response.status(400).json({error: 'Title missing'});
+  } else if(!book.author) {
+    return response.status(400).json({error: 'Author missing'});
+  } else if(!book.description) {
+    return response.status(400).json({error: 'Description missing'});
+  }
+
   const nextId = books.length > 0
     ? Math.max(...books.map(n => n.id)) 
-    : 0
+    : 0;
 
   book.id = nextId + 1;
 
