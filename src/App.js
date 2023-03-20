@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 
-import ListGroup from 'react-bootstrap/ListGroup';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import BookList from './components/BookList';
+import BookForm from './components/BookForm';
 
 import bookService from './services/books';
 
@@ -56,6 +55,7 @@ const App = () => {
         setTitle('');
         setAuthor('');
         setDescription('');
+        setSelectedBookId(null);
       });
   }
 
@@ -91,59 +91,27 @@ const App = () => {
       })
   }
 
-  const saveNewBtnDisabled = [title,author,description].includes('');
-  const saveBtnDisabled = [title,author,description].includes('') || selectedBookId === null;
-  const deleteBtnDisabled = selectedBookId === null;
-
   return (
     <div className='main-container'>
       <div className='books-container'>
         <h1>Book collection</h1>
-        <div className='book-list-container'>
-          <ListGroup as='ul'>
-            {books.map(book => {
-              return <ListGroup.Item key={book.id} as='li' onClick={() => handleBookClick(book.id)}>{book.title}</ListGroup.Item>
-            })
-            }
-          </ListGroup>
-        </div>
-        <div className='book-form-container'>
-          <Form>
-            <Form.Group>
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type='text'
-                value={title}
-                onChange={handleTitleChange}
-                isInvalid={title === ''}
-              />
-              <Form.Control.Feedback type="invalid">Title is required</Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label >Author</Form.Label>
-              <Form.Control
-                type='text'
-                value={author}
-                onChange={handleAuthorChange}
-                isInvalid={author === ''}
-              />
-              <Form.Control.Feedback type="invalid">Author is required</Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Description</Form.Label>
-              <Form.Control             
-                as='textarea'
-                value={description}
-                onChange={handleDescriptionChange}
-                isInvalid={description === ''}
-              />
-              <Form.Control.Feedback type="invalid">Description is required</Form.Control.Feedback>
-            </Form.Group>
-          </Form>
-          <Button className='save-new-btn' onClick={handleSaveNewBook} disabled={saveNewBtnDisabled}>Save new</Button>
-          <Button className='save-delete-btn' onClick={handleUpdateBook} disabled={saveBtnDisabled}>Save</Button>
-          <Button className='save-delete-btn' onClick={handleDeleteBook} disabled={deleteBtnDisabled}>Delete</Button>
-        </div>
+        <BookList
+          books={books}
+          handleBookClick={handleBookClick}
+          selectedBookId={selectedBookId}
+        />
+        <BookForm
+          title={title}
+          handleTitleChange={handleTitleChange}
+          author={author}
+          handleAuthorChange={handleAuthorChange}
+          description={description}
+          handleDescriptionChange={handleDescriptionChange}
+          handleSaveNewBook={handleSaveNewBook}
+          handleUpdateBook={handleUpdateBook}
+          handleDeleteBook={handleDeleteBook}
+          selectedBookId={selectedBookId}
+        />
       </div>
     </div>
   )

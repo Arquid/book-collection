@@ -3,17 +3,27 @@
   justify-content: center;
 }
 
+h1 {
+  text-align: center;
+}
+
 .book-list-container {
   border: solid 1px lightgrey;
   border-radius: 3px;
   margin-top: 32px;
   margin-right: 15px;
   float: inline-start;
-  height: 200px;
+  min-height: 200px;
+  width: 300px;
+}
+
+.list-group-item {
+  cursor: pointer;
 }
 
 .book-form-container {
   display: inline-block;
+  width: 300px;
 }
 
 .save-new-btn {
