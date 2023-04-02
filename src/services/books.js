@@ -31,4 +31,5 @@ const update = async (id, updatedBook) => {
   return response.data;
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {getAll, getOne, create, remove, update}

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import Alert from 'react-bootstrap/Alert';
+
 import BookList from './components/BookList';
 import BookForm from './components/BookForm';
 
@@ -11,11 +13,15 @@ const App = () => {
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
   const [selectedBookId, setSelectedBookId] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   useEffect(() => {
     bookService
       .getAll()
       .then(books => setBooks(books))
+      .catch(error => {
+        setAlertMessage({message: error.message, type: 'danger'});
+      })
   }, []);
 
   const handleBookClick = (id) => {
@@ -26,7 +32,18 @@ const App = () => {
         setTitle(book.title);
         setAuthor(book.author);
         setDescription(book.description);
-      });
+      })
+      .catch(error => {
+        setAlertMessage({message: `Clicked book is already removed from collection`, type: 'danger'});
+        setBooks(books.filter(book => book.id !== id));
+        setTitle('');
+        setAuthor('');
+        setDescription('');
+        setSelectedBookId(null);
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 3000);
+      })
   }
 
   const handleTitleChange = (event) => {
@@ -52,11 +69,21 @@ const App = () => {
       .create(newBook)
       .then(returnedBook => {
         setBooks(books.concat(returnedBook));
+        setAlertMessage({message: `Book ${title} added to collection.`, type: 'primary'});
         setTitle('');
         setAuthor('');
         setDescription('');
         setSelectedBookId(null);
-      });
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 3000);
+      })
+      .catch(error => {
+        setAlertMessage({message: error.response.data.error, type: 'danger'});
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 3000);
+      })
   }
 
   const handleUpdateBook = () => {
@@ -71,12 +98,27 @@ const App = () => {
     bookService
       .update(selectedBookId, changedBook)
       .then(updatedBook => {
+        setAlertMessage({message: `Book ${title} updated.`, type: 'primary'});
         setBooks(books.map(book => book.id === selectedBookId ? updatedBook : book));
         setTitle('');
         setAuthor('');
         setDescription('');
         setSelectedBookId(null);
-      });
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 3000);
+      })
+      .catch(error => {
+        setAlertMessage({message: error.response.data.error, type: 'danger'});
+        setBooks(books.filter(book => book.id !== selectedBookId));
+        setTitle('');
+        setAuthor('');
+        setDescription('');
+        setSelectedBookId(null);
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 3000);
+      })
   }
 
   const handleDeleteBook = () => {
@@ -84,10 +126,14 @@ const App = () => {
       .remove(selectedBookId)
       .then(response => {
         setBooks(books.filter(book => book.id !== selectedBookId));
+        setAlertMessage({message: `Book ${title} removed from collection.`, type: 'primary'});
         setTitle('');
         setAuthor('');
         setDescription('');
         setSelectedBookId(null);
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 3000);
       })
   }
 
@@ -95,6 +141,7 @@ const App = () => {
     <div className='main-container'>
       <div className='books-container'>
         <h1>Book collection</h1>
+        {alertMessage && <Alert variant={alertMessage.type}>{alertMessage.message}</Alert>}
         <BookList
           books={books}
           handleBookClick={handleBookClick}
