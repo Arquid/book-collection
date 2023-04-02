@@ -22,7 +22,7 @@ cd book-collection
 cd backend && npm install && cd ..
 npm install
 ```
-5. Run application (frontend and backend) on development mode
+5. Run application (frontend and backend)
 ```
 npm run start:full
 ```
