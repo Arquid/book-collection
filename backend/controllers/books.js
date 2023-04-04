@@ -59,7 +59,11 @@ booksRouter.put('/:id', (request, response) => {
 
   const book = books.find(book => book.id === id);
 
-  response.json(book);
+  if(book) {
+    response.json(book);
+  } else {
+    response.status(404).end();
+  }
 })
 
 module.exports = booksRouter
